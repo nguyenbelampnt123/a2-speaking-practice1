@@ -1,0 +1,119 @@
+A2 SPEAKING ONLINE – BẢN DÙNG THỬ
+Tạo bởi MR. NGUYỄN BÉ LÂM
+
+MỤC TIÊU
+- Học sinh dùng 1 mật khẩu lớp chung.
+- Admin có mật khẩu riêng.
+- Admin đổi mật khẩu lớp ở bất kỳ máy nào.
+- Mật khẩu mới áp dụng cho tất cả thiết bị.
+- Khi đổi mật khẩu lớp, toàn bộ phiên học sinh cũ bị vô hiệu hóa.
+- Admin có nút "Đăng xuất tất cả học sinh".
+
+========================================
+CÁCH ĐƯA LÊN VERCEL
+========================================
+
+BƯỚC 1 – GIẢI NÉN FILE ZIP
+Giải nén thư mục a2-speaking-online.
+
+BƯỚC 2 – ĐƯA MÃ NGUỒN LÊN GITHUB
+1. Vào github.com và đăng nhập.
+2. Chọn New repository.
+3. Đặt tên: a2-speaking-online
+4. Chọn Private nếu muốn.
+5. Tạo repository.
+6. Chọn "uploading an existing file".
+7. Kéo toàn bộ FILE VÀ THƯ MỤC bên trong a2-speaking-online lên GitHub.
+8. Commit changes.
+
+BƯỚC 3 – TẠO PROJECT TRÊN VERCEL
+1. Vào vercel.com và đăng nhập.
+2. Chọn Add New > Project.
+3. Import repository a2-speaking-online từ GitHub.
+4. Chưa cần đổi framework: Vercel sẽ nhận Next.js.
+
+BƯỚC 4 – THÊM UPSTASH REDIS
+Cách dễ nhất:
+1. Trong Vercel, mở project.
+2. Vào Storage hoặc Marketplace.
+3. Tìm "Upstash Redis".
+4. Create/Connect database.
+5. Kết nối database đó với project này.
+6. Kiểm tra project có hai Environment Variables:
+   UPSTASH_REDIS_REST_URL
+   UPSTASH_REDIS_REST_TOKEN
+
+BƯỚC 5 – THÊM 3 ENVIRONMENT VARIABLES CỦA WEB
+Vào Project > Settings > Environment Variables.
+Thêm:
+
+AUTH_SECRET
+- Giá trị: một chuỗi bí mật dài ít nhất 40 ký tự.
+- Ví dụ cấu trúc: một chuỗi ngẫu nhiên dài, KHÔNG dùng mật khẩu lớp.
+
+INITIAL_STUDENT_PASSWORD
+- Ví dụ: A2LAM2026
+- Đây là mật khẩu lớp LẦN ĐẦU.
+
+INITIAL_ADMIN_PASSWORD
+- Ví dụ: AdminLAM2026!
+- Đây là mật khẩu quản trị LẦN ĐẦU.
+
+Chọn Production + Preview + Development nếu Vercel hỏi môi trường.
+
+BƯỚC 6 – DEPLOY / REDEPLOY
+Sau khi thêm Upstash và các Environment Variables:
+1. Vào Deployments.
+2. Chọn deployment mới nhất.
+3. Chọn Redeploy.
+4. Đợi trạng thái Ready.
+
+========================================
+CÁCH DÙNG SAU KHI WEB HOẠT ĐỘNG
+========================================
+
+TRANG HỌC
+https://TEN-WEB-CUA-BAN.vercel.app
+
+TRANG ADMIN
+https://TEN-WEB-CUA-BAN.vercel.app/admin
+
+Lần đầu:
+- Học sinh: dùng INITIAL_STUDENT_PASSWORD
+- Admin: dùng INITIAL_ADMIN_PASSWORD
+
+ĐỔI MẬT KHẨU LỚP
+1. Vào /admin.
+2. Đăng nhập bằng mật khẩu quản trị.
+3. Nhập mật khẩu lớp mới 2 lần.
+4. Bấm ĐỔI MẬT KHẨU LỚP.
+5. Mật khẩu cũ hết hiệu lực.
+6. Học sinh đang mở web sẽ bị yêu cầu đăng nhập lại sau tối đa khoảng 30 giây.
+
+NẾU LỚP KHÁC ĐÃ BIẾT MẬT KHẨU
+1. Vào /admin.
+2. Đổi mật khẩu lớp.
+3. Chỉ gửi mật khẩu mới cho đúng lớp.
+Hoặc bấm "ĐĂNG XUẤT TẤT CẢ HỌC SINH" để khóa các phiên đang mở.
+
+LƯU Ý QUAN TRỌNG
+- KHÔNG gửi mật khẩu Admin cho học sinh.
+- Sau khi hệ thống đã khởi tạo dữ liệu trong Redis, việc sửa INITIAL_STUDENT_PASSWORD
+  hoặc INITIAL_ADMIN_PASSWORD trên Vercel KHÔNG phải cách đổi mật khẩu đang dùng.
+  Hãy đổi trong /admin.
+- Nếu quên mật khẩu Admin, cần can thiệp vào Redis hoặc reset database; hãy lưu mật khẩu Admin ở nơi an toàn.
+
+CẬP NHẬT GHI ÂM
+- Web không chấm điểm speaking.
+- Mỗi Part có nút Bắt đầu ghi âm / Dừng & lưu.
+- Bản ghi được lưu bằng IndexedDB trên thiết bị của học sinh.
+- Học sinh có thể nghe lại và tải file .webm về máy.
+- Bản ghi không tự động gửi lên server/database.
+
+
+CẬP NHẬT TIẾT KIỆM REDIS
+- Đã bỏ cơ chế kiểm tra phiên đăng nhập mỗi 30 giây.
+- Học sinh học bài, chuyển đề, nghe mẫu, ghi âm: không gọi Redis định kỳ.
+- Redis chủ yếu được dùng khi đăng nhập và khi Admin đổi mật khẩu / đăng xuất học sinh.
+- Khi Admin đổi mật khẩu, mật khẩu cũ không thể dùng cho lần đăng nhập mới.
+- Học sinh đang mở sẵn trang có thể tiếp tục xem cho đến khi tải lại/đăng nhập lại.
